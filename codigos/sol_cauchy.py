@@ -1,7 +1,9 @@
 import numpy as np
+import time
 
 def sol_cauchy(A, b, x0, eps, mit):
 
+    start = time.time()
     r = b - A.dot(x0)
     sigma = np.linalg.norm(r, 2)
     
@@ -14,12 +16,14 @@ def sol_cauchy(A, b, x0, eps, mit):
         if sigma < eps:
             break
         x0 = x.copy()
+    print("El método de Cauchy tardó {} s.".format(time.time() - start))
 
     return x
 
 
 def sol_gastinel(A, b, x0, eps, mit):
 
+    start = time.time()
     r = b - A.dot(x0)
     d = np.sign(r)
 
@@ -35,6 +39,7 @@ def sol_gastinel(A, b, x0, eps, mit):
         if sigma < eps:
             break
         x0 = x.copy()
+    print("El método de Gastinel tardó {} s.".format(time.time() - start))
 
     return x
 
