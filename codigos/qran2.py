@@ -117,3 +117,34 @@ def qrhholderp(A0):
 
     return Q, A, P
 
+
+def qrgivensp(A0):
+    '''
+    Q, R, P = qrgivensp(A)
+    Realiza la descomposición QR con permutaciones de A
+    utilizando reflexiones de Givens,
+    obteniendo que AP = QR
+    '''
+    A = A0.copy()
+    A = A.astype('float64')
+    m, n = A.shape
+    Q = np.eye(m)
+    P = np.eye(n)
+    c = np.sum(A**2, 0)
+    p = min([m,n])
+    for j in range(p):
+        l = np.argmax(c[j:])
+        l = j + l
+        if c[l]==0:
+            return Q, A, P
+        else:
+            A[:,[j,l]] = A[:,[l,j]]
+            P[:,[j,l]] = P[:,[l,j]]
+            c[[j,l]] = c[[l,j]]
+            u, rho = house(A[j:, j])
+            w = rho*u
+            A[j:, j:] = A[j:, j:] - np.outer(w, u.T @ A[j:, j:])
+            Q[:, j:] = Q[:, j:] - np.outer(Q[:, j:] @ w, u)
+            c[j:] = c[j:] - A[j, j:]**2
+
+    return Q, A, P
